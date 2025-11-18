@@ -17,151 +17,142 @@
     }
     html, body {
       height:100%; background:var(--bg-color);
-      font-family:var(--font); color:#fff;
+      font-family: var(--font); color:#fff;
       display:flex; justify-content:center; align-items:center;
-      overflow:hidden;
+      /* Removed overflow:hidden to avoid potential clipping issues */
     }
     .card {
       position:relative;
-      backdrop-filter:blur(var(--glass-blur));
-      background:var(--glass-bg);
-      border:1px solid var(--accent);
-      border-radius:16px;
-      padding:2rem;
-      width:90%; max-width:600px;
-      text-align:center;
-      box-shadow:0 20px 40px rgba(0,0,0,0.3);
+      backdrop-filter: blur(var(--glass-blur));
+      background: var(--glass-bg);
+      border: 1px solid var(--accent);
+      border-radius: 16px;
+      padding: 2rem;
+      width: 90%; max-width: 600px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
       transition: background-color var(--transition), border-color var(--transition);
     }
-    h1 { margin-bottom:1rem; font-size:2rem; text-shadow:0 0 8px rgba(0,0,0,0.7); }
-    .fact { font-size:1.2rem; line-height:1.4; min-height:4em;
-            opacity:0; transition:opacity var(--transition); }
-    .fact.visible { opacity:1; }
+    h1 {
+      margin-bottom: 1rem;
+      font-size: 2rem;
+      text-shadow: 0 0 8px rgba(0,0,0,0.7);
+    }
+    .fact {
+      font-size: 1.2rem;
+      line-height: 1.4;
+      min-height: 4em;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+    .fact.visible {
+      opacity: 1;
+    }
     .btn {
-      margin:1rem .5rem .5rem;
-      padding:.75rem 1.5rem;
-      background:transparent;
-      border:2px solid var(--accent);
-      border-radius:8px;
-      color:var(--accent);
-      cursor:pointer;
-      transition:background var(--transition), color var(--transition), border-color var(--transition);
+      margin: 1rem 0.5rem 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: transparent;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      color: var(--accent);
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition), border-color var(--transition);
     }
     .btn:hover {
-      background:var(--accent);
-      color:#111;
+      background: var(--accent);
+      color: #111;
     }
-    .shares { margin-top:.5rem; }
-    .shares .btn { font-size:.9rem; }
+    .shares {
+      margin-top: 0.5rem;
+    }
+    .shares .btn {
+      font-size: 0.9rem;
+    }
     body::before {
-      content:""; position:absolute; top:0; left:0;
-      width:100%; height:100%; background-size:cover;
-      background-position:center;
-      filter:brightness(0.5);
-      transition:background-image var(--transition);
-      z-index:-2;
+      content: "";
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.5);
+      transition: background-image var(--transition);
+      z-index: -2;
       background-image: var(--bg-img, none);
     }
     body::after {
-      content:""; position:absolute; top:0; left:0;
-      width:100%; height:100%; background:var(--bg-color);
-      opacity:0.6; z-index:-1;
+      content: "";
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: var(--bg-color);
+      opacity: 0.6;
+      z-index: -1;
     }
     @media(max-width:480px){
-      h1 { font-size:1.5rem; }
-      .fact { font-size:1rem; }
+      h1 { font-size: 1.5rem; }
+      .fact { font-size: 1rem; }
     }
   </style>
 </head>
 <body>
-  <div class="card">
+  <div class="card" role="main">
     <h1>10 Fun Facts About Drones</h1>
-    <div id="fact" class="fact">Click “Next Fact” to begin.</div>
-    <button id="next" class="btn">Next Fact</button>
+    <div id="fact" class="fact" aria-live="polite">Click “Next Fact” to begin.</div>
+    <button id="next" class="btn" type="button">Next Fact</button>
     <div class="shares">
-      <button id="twitter" class="btn">Share on Twitter</button>
-      <button id="linkedin" class="btn">Share on LinkedIn</button>
+      <button id="twitter" class="btn" type="button">Share on Twitter</button>
+      <button id="linkedin" class="btn" type="button">Share on LinkedIn</button>
     </div>
   </div>
 
   <script>
-    const data = [
-      {
-        fact: "The very first weaponized drone dates back to 1849, when Austrian forces used unmanned balloons loaded with explosives to bombard Venice.",
-        color: "#1e88e5"
-      },
-      {
-        fact: "The term “drone” was popularized in the 1930s by the RAF for radio-controlled target aircraft that buzzed like a male bee.",
-        color: "#00acc1"
-      },
-      {
-        fact: "Today’s consumer drone market is dominated by DJI, which holds over 70% of global share, largely thanks to its Phantom and Mavic series innovations.",
-        color: "#43a047"
-      },
-      {
-        fact: "Researchers have developed drones capable of planting 100,000 tree seeds per day using pressurized pods—potentially reforesting areas 150 times faster than humans.",
-        color: "#8e24aa"
-      },
-      {
-        fact: "Some advanced drones now use hydrogen fuel cells instead of lithium-ion batteries, extending flight times from 30 minutes up to 2 hours per mission.",
-        color: "#f4511e"
-      },
-      {
-        fact: "In 2018, Intel set a Guinness World Record by flying a synchronized swarm of 1,218 LED-equipped drones during the Winter Olympics opening ceremony.",
-        color: "#3949ab"
-      },
-      {
-        fact: "Underwater drones (ROVs) can dive deeper than any human-piloted vehicle—some exceed depths of 6,000 meters for deep-sea exploration and inspection.",
-        color: "#00897b"
-      },
-      {
-        fact: "Drones equipped with multispectral cameras are transforming precision agriculture by detecting plant stress and disease before it’s visible to the naked eye.",
-        color: "#fb8c00"
-      },
-      {
-        fact: "The smallest fixed-wing drone in production weighs just 23 grams (about the weight of a AA battery) and can glide silently for over 20 minutes.",
-        color: "#8d6e63"
-      },
-      {
-        fact: "In the EU’s ‘Open’ drone category, any model under 25 kg flying below 120 m doesn’t require a pilot’s license—democratizing aerial innovation across the continent.",
-        color: "#546e7a"
+    document.addEventListener("DOMContentLoaded", () => {
+      const data = [
+        { fact: "The very first weaponized drone dates back to 1849, when Austrian forces used unmanned balloons loaded with explosives to bombard Venice.", color: "#1e88e5" },
+        { fact: "The term “drone” was popularized in the 1930s by the RAF for radio-controlled target aircraft that buzzed like a male bee.", color: "#00acc1" },
+        { fact: "Today’s consumer drone market is dominated by DJI, which holds over 70% of global share, largely thanks to its Phantom and Mavic series innovations.", color: "#43a047" },
+        { fact: "Researchers have developed drones capable of planting 100,000 tree seeds per day using pressurized pods—potentially reforesting areas 150 times faster than humans.", color: "#8e24aa" },
+        { fact: "Some advanced drones now use hydrogen fuel cells instead of lithium-ion batteries, extending flight times from 30 minutes up to 2 hours per mission.", color: "#f4511e" },
+        { fact: "In 2018, Intel set a Guinness World Record by flying a synchronized swarm of 1,218 LED-equipped drones during the Winter Olympics opening ceremony.", color: "#3949ab" },
+        { fact: "Underwater drones (ROVs) can dive deeper than any human-piloted vehicle—some exceed depths of 6,000 meters for deep-sea exploration and inspection.", color: "#00897b" },
+        { fact: "Drones equipped with multispectral cameras are transforming precision agriculture by detecting plant stress and disease before it’s visible to the naked eye.", color: "#fb8c00" },
+        { fact: "The smallest fixed-wing drone in production weighs just 23 grams (about the weight of a AA battery) and can glide silently for over 20 minutes.", color: "#8d6e63" },
+        { fact: "In the EU’s ‘Open’ drone category, any model under 25 kg flying below 120 m doesn’t require a pilot’s license—democratizing aerial innovation across the continent.", color: "#546e7a" }
+      ];
+
+      const factEl = document.getElementById("fact");
+      const nextBtn = document.getElementById("next");
+      const twitterBtn = document.getElementById("twitter");
+      const linkedinBtn = document.getElementById("linkedin");
+      const card = document.querySelector('.card');
+
+      function showRandomFact() {
+        const { fact, color } = data[Math.floor(Math.random() * data.length)];
+        factEl.classList.remove("visible");
+        setTimeout(() => {
+          factEl.textContent = fact;
+          factEl.style.color = color;
+          card.style.borderColor = color;
+          document.body.style.setProperty("--accent", color);
+          factEl.classList.add("visible");
+        }, 250);
       }
-    ];
 
-    const factEl = document.getElementById("fact");
-    const nextBtn = document.getElementById("next");
-    const twitterBtn = document.getElementById("twitter");
-    const linkedinBtn = document.getElementById("linkedin");
-    const card = document.querySelector('.card');
+      twitterBtn.addEventListener("click", () => {
+        const text = encodeURIComponent(factEl.textContent + " #DroneFacts");
+        window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
+      });
 
-    function showRandomFact() {
-      const { fact, color } = data[Math.floor(Math.random() * data.length)];
-      factEl.classList.remove("visible");
-      setTimeout(() => {
-        factEl.textContent = fact;
-        factEl.parentElement.style.backgroundColor = "rgba(0,0,0,0.5)";
-        factEl.style.color = color;
-        card.style.borderColor = color;
-        document.body.style.setProperty("--accent", color);
-        factEl.classList.add("visible");
-      }, 250);
-    }
+      linkedinBtn.addEventListener("click", () => {
+        const summary = encodeURIComponent(factEl.textContent);
+        window.open(
+          `https://www.linkedin.com/sharing/share-offsite/?url=&summary=${summary}`,
+          "_blank"
+        );
+      });
 
-    twitterBtn.addEventListener("click", () => {
-      const text = encodeURIComponent(factEl.textContent + " #DroneFacts");
-      window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
+      nextBtn.addEventListener("click", showRandomFact);
+      showRandomFact();
     });
-
-    linkedinBtn.addEventListener("click", () => {
-      const summary = encodeURIComponent(factEl.textContent);
-      window.open(
-        `https://www.linkedin.com/sharing/share-offsite/?url=&summary=${summary}`,
-        "_blank"
-      );
-    });
-
-    nextBtn.addEventListener("click", showRandomFact);
-    window.onload = showRandomFact;
   </script>
 </body>
 </html>
