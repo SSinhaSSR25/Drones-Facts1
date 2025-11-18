@@ -9,17 +9,21 @@
     :root {
       --bg-color: #111;
       --accent: #0ff;
-      --glass-bg: rgba(255,255,255,0.1);
+      --glass-bg: rgba(255,255,255,0.06);
       --glass-blur: 10px;
       --transition: 0.5s ease;
       --font: 'Segoe UI', sans-serif;
       --bg-img: none;
     }
     html, body {
-      height:100%; background:var(--bg-color);
-      font-family: var(--font); color:#fff;
-      display:flex; justify-content:center; align-items:center;
-      /* Removed overflow:hidden to avoid potential clipping issues */
+      height:100%;
+      background:var(--bg-color);
+      font-family: var(--font);
+      color:#fff;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      position:relative;
     }
     .card {
       position:relative;
@@ -28,10 +32,12 @@
       border: 1px solid var(--accent);
       border-radius: 16px;
       padding: 2rem;
-      width: 90%; max-width: 600px;
+      width: 90%;
+      max-width: 600px;
       text-align: center;
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
       transition: background-color var(--transition), border-color var(--transition);
+      z-index: 1;
     }
     h1 {
       margin-bottom: 1rem;
@@ -44,6 +50,7 @@
       min-height: 4em;
       opacity: 0;
       transition: opacity var(--transition);
+      margin-bottom: 0.75rem;
     }
     .fact.visible {
       opacity: 1;
@@ -96,7 +103,7 @@
 <body>
   <div class="card" role="main">
     <h1>10 Fun Facts About Drones</h1>
-    <div id="fact" class="fact" aria-live="polite">Click “Next Fact” to begin.</div>
+    <div id="fact" class="fact" aria-live="polite">Click "Next Fact" to begin.</div>
     <button id="next" class="btn" type="button">Next Fact</button>
     <div class="shares">
       <button id="twitter" class="btn" type="button">Share on Twitter</button>
@@ -108,15 +115,15 @@
     document.addEventListener("DOMContentLoaded", () => {
       const data = [
         { fact: "The very first weaponized drone dates back to 1849, when Austrian forces used unmanned balloons loaded with explosives to bombard Venice.", color: "#1e88e5" },
-        { fact: "The term “drone” was popularized in the 1930s by the RAF for radio-controlled target aircraft that buzzed like a male bee.", color: "#00acc1" },
+        { fact: "The term \"drone\" was popularized in the 1930s by the RAF for radio-controlled target aircraft that buzzed like a male bee.", color: "#00acc1" },
         { fact: "Today’s consumer drone market is dominated by DJI, which holds over 70% of global share, largely thanks to its Phantom and Mavic series innovations.", color: "#43a047" },
-        { fact: "Researchers have developed drones capable of planting 100,000 tree seeds per day using pressurized pods—potentially reforesting areas 150 times faster than humans.", color: "#8e24aa" },
-        { fact: "Some advanced drones now use hydrogen fuel cells instead of lithium-ion batteries, extending flight times from 30 minutes up to 2 hours per mission.", color: "#f4511e" },
+        { fact: "Researchers have developed drones capable of planting tens of thousands of tree seeds per day using pressurized pods—potentially reforesting areas much faster than manual planting.", color: "#8e24aa" },
+        { fact: "Some advanced drones now use hydrogen fuel cells instead of lithium-ion batteries, extending flight times from about 30 minutes up to 2 hours for certain missions.", color: "#f4511e" },
         { fact: "In 2018, Intel set a Guinness World Record by flying a synchronized swarm of 1,218 LED-equipped drones during the Winter Olympics opening ceremony.", color: "#3949ab" },
-        { fact: "Underwater drones (ROVs) can dive deeper than any human-piloted vehicle—some exceed depths of 6,000 meters for deep-sea exploration and inspection.", color: "#00897b" },
+        { fact: "Underwater drones (ROVs) can reach depths exceeding 6,000 meters for deep-sea exploration and inspection—far deeper than most human-occupied submersibles.", color: "#00897b" },
         { fact: "Drones equipped with multispectral cameras are transforming precision agriculture by detecting plant stress and disease before it’s visible to the naked eye.", color: "#fb8c00" },
-        { fact: "The smallest fixed-wing drone in production weighs just 23 grams (about the weight of a AA battery) and can glide silently for over 20 minutes.", color: "#8d6e63" },
-        { fact: "In the EU’s ‘Open’ drone category, any model under 25 kg flying below 120 m doesn’t require a pilot’s license—democratizing aerial innovation across the continent.", color: "#546e7a" }
+        { fact: "The smallest fixed-wing drone in production weighs around 23 grams (roughly the weight of a AA battery) and can glide silently for over 20 minutes.", color: "#8d6e63" },
+        { fact: "In the EU’s 'Open' drone category, many models under 25 kg flying below 120 meters do not require a pilot’s license, making basic drone use more accessible.", color: "#5e35b1" }
       ];
 
       const factEl = document.getElementById("fact");
@@ -134,7 +141,7 @@
           card.style.borderColor = color;
           document.body.style.setProperty("--accent", color);
           factEl.classList.add("visible");
-        }, 250);
+        }, 200);
       }
 
       twitterBtn.addEventListener("click", () => {
@@ -144,6 +151,9 @@
 
       linkedinBtn.addEventListener("click", () => {
         const summary = encodeURIComponent(factEl.textContent);
+        // LinkedIn prefers a URL to share; summary can be included but many endpoints require a valid url.
+        // Using share-offsite with an empty url parameter works in many browsers but if you want consistent results,
+        // replace 'url=' with a valid URL to share.
         window.open(
           `https://www.linkedin.com/sharing/share-offsite/?url=&summary=${summary}`,
           "_blank"
